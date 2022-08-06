@@ -48,7 +48,6 @@ export const lightTheme = createTheme({
       }
     },
 
-
     MuiButton: {
       defaultProps: {
         variant: 'contained',
@@ -57,6 +56,8 @@ export const lightTheme = createTheme({
       },
       styleOverrides: {
         root: {
+          backgroundColor: 'white',
+          color: 'black',
           textTransform: 'none',
           boxShadow: 'none',
           borderRadius: 10,
