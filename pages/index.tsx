@@ -5,7 +5,7 @@ import { ShopLayout } from '../components/layouts';
 
 const Home: NextPage = () => {
   return (
-    <ShopLayout title={'Teslo-Shop - Home'} pageDescription={'Encuentra los mejores productos de Teslo'}>
+    <ShopLayout title='Teslo-Shop - Home' pageDescription='Encuentra los mejores productos de Teslo'>
       <Typography variant='h1' component='h1'>
         Tienda
       </Typography>
