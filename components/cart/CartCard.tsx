@@ -7,9 +7,10 @@ import { IProduct } from '../../interfaces';
 
 interface Props {
     product: IProduct;
+    editable: boolean;
 }
 
-export const CartCard: FC<Props> = ({ product }) => {
+export const CartCard: FC<Props> = ({ product, editable }) => {
   return (
     <Grid container spacing={2} sx={{ mb: 1 }} key={product.slug}>
         <Grid item xs={3}>
@@ -30,8 +31,11 @@ export const CartCard: FC<Props> = ({ product }) => {
             <Box display='flex' flexDirection='column'>
                 <Typography variant='body1'>{product.title}</Typography>
                 <Typography variant='body1'>Talla: <strong>M</strong></Typography>
-                {/* Condicional */}
-                <ItemCounter />
+                {
+                    editable
+                    ? <ItemCounter />
+                    : <Typography>3 elementos</Typography>
+                }
             </Box>
         </Grid>
         <Grid
@@ -42,11 +46,14 @@ export const CartCard: FC<Props> = ({ product }) => {
             flexDirection='column'
         >
             <Typography variant='subtitle1'>${product.price}</Typography>
-            {/* Editable */}
-            <Button variant='text' color='error'>
-                Remover
-            </Button>
+            {
+                editable && (
+                    <Button variant='text' color='error'>
+                        Remover
+                    </Button>
+                )
+            }
         </Grid>
     </Grid>
   )
-}
+};

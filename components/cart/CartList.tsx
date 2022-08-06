@@ -8,7 +8,11 @@ const productsInCart = [
     initialData.products[2],
 ]
 
-export const CartList: FC = () => {
+interface Props {
+    editable?: boolean;
+}
+
+export const CartList: FC<Props> = ({ editable = false }) => {
   return (
     <>
         {
@@ -17,9 +21,10 @@ export const CartList: FC = () => {
                 <CartCard
                     key={product.slug}
                     product={product as any}
+                    editable={editable}
                 />
             ))
         }
     </>
   )
-}
+};
