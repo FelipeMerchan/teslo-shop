@@ -78,7 +78,7 @@ export const lightTheme = createTheme({
       },
       styleOverrides: {
         root: {
-          borderRadius: '10px',
+          borderRadius: '4px',
         }
       }
     }
