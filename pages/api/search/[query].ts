@@ -23,7 +23,7 @@ const searchProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
     if (query.length === 0) {
         return res.status(400).json({
             message: 'Debe especificar el query en la busqueda',
-        })
+        });
     }
 
     query = query.toString().toLowerCase();
