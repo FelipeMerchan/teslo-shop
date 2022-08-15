@@ -13,7 +13,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
         case 'GET':
             return getProductBySlug(req, res);    
         default:
-            return res.status(400).json({ message: 'Metodo no existe' })
+            return res.status(400).json({ message: 'Metodo no existe' });
     }
 }
 
