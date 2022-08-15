@@ -1,4 +1,4 @@
-import { NextPage, GetServerSideProps } from 'next';
+import { NextPage, GetStaticPaths } from 'next';
 
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 
@@ -55,26 +55,6 @@ const ProductPage: NextPage<Props> = ({ product }) => {
       </Grid>
     </ShopLayout>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { slug = '' } = params as { slug: string };
-  const product = await dbProducts.getProductBySlug(slug);
-  
-  if (!product) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      }
-    }
-  }
-
-  return {
-    props: {
-      product,
-    }
-  }
 }
 
 export default ProductPage;
