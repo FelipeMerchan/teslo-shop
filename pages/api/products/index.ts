@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { db } from '../../../database';
+import { db, SHOP_CONSTANTS } from '../../../database';
 import { IProduct } from '../../../interfaces/products';
 import { Product } from '../../../models';
 
@@ -20,11 +20,19 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 }
 
 const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+    const { gender = 'all' } = req.query;
+
+    let condition = {};
+
+    if(gender !== 'all' && SHOP_CONSTANTS.validGenders.includes(`${gender}`)) {
+        condition = { gender };
+    }
+
     await db.connect();
     /* Si no le pasamos ningun parametro al metodo find va a
     retornar todos los elementos. Usando lean hacemos que traiga menos informacion
     de cada elemento:  */
-    const products = await Product.find()
+    const products = await Product.find(condition)
                                   /* Podemos seleccionar los campos que necesitemos: */
                                   .select('title images price inStock slug -_id')
                                   /* con -(nombre del campo) podemos deseleccionar */
