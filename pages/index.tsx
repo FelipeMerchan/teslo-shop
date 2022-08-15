@@ -3,16 +3,10 @@ import { Typography } from '@mui/material';
 
 import { ShopLayout } from '../components/layouts';
 import { ProductList } from '../components/products';
-
-import useSWR from 'swr';
-const fetcher = (...args: [key: string]) => fetch(...args).then(res => res.json())
+import { useProducts } from '../hooks';
 
 const Home: NextPage = () => {
-
-  const { data, error } = useSWR('/api/products', fetcher);
-
-  if (error) return <div>failed to load</div>
-  if (!data) return <div>loading...</div>
+  const { productList, isLoading } = useProducts('/products');
 
   return (
     <ShopLayout title='Teslo-Shop - Home' pageDescription='Encuentra los mejores productos de Teslo'>
@@ -23,7 +17,11 @@ const Home: NextPage = () => {
         Todos los productos
       </Typography>
 
-      <ProductList productList={data} />
+      {
+        isLoading
+          ? <h1>Cargando...</h1>
+          : <ProductList productList={productList} />
+      }
     </ShopLayout>
   )
 }
