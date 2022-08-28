@@ -6,7 +6,7 @@ import { ShopLayout } from '../components/layouts';
 import { ProductList } from '../components/products';
 import { FullScreenLoading } from '../components/ui';
 
-const Home: NextPage = () => {
+const HomePage: NextPage = () => {
   const { productList, isLoading } = useProducts('/products');
 
   return (
@@ -27,4 +27,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default HomePage
