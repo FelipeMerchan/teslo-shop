@@ -1,12 +1,12 @@
+import { useState } from 'react';
 import { NextPage, GetStaticPaths, GetStaticProps } from 'next';
-
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 
 import { ShopLayout } from '../../components/layouts/ShopLayout';
 import { ProductSlideshow, SizeSelector } from '../../components/products';
 import { ItemCounter } from '../../components/ui';
 
-import { IProduct } from '../../interfaces';
+import { ICartProduct, IProduct, ISize } from '../../interfaces';
 import { dbProducts } from '../../database';
 
 interface Props {
@@ -14,6 +14,24 @@ interface Props {
 }
 
 const ProductPage: NextPage<Props> = ({ product }) => {
+  const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+    _id: product._id,
+    image: product.images[0],
+    price: product.price,
+    size: undefined,
+    slug: product.slug,
+    title: product.title,
+    gender: product.gender,
+    quantity: 1,
+  });
+
+  const onSelectedSize = (size: ISize) => {
+    setTempCartProduct(currentProduct => ({
+      ...currentProduct,
+      size,
+    }));
+  }
+
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>
       <Grid container spacing={3}>
@@ -34,8 +52,9 @@ const ProductPage: NextPage<Props> = ({ product }) => {
               <Typography variant='subtitle2'>Cantidad</Typography>
               <ItemCounter />
               <SizeSelector
-                selectedSize={product.sizes[0]}
+                selectedSize={tempCartProduct.size}
                 sizes={product.sizes}
+                onSelectedSize={onSelectedSize}
               />
             </Box>
 
@@ -44,7 +63,11 @@ const ProductPage: NextPage<Props> = ({ product }) => {
               (product.inStock > 0)
                 ? (
                   <Button className='circular-btn' color='secondary'>
-                    Agregar al carrito
+                    {
+                      tempCartProduct.size
+                        ? 'Agregar al carrito'
+                        : 'Seleccione una talla'
+                    }
                   </Button>
                 )
                 : (
