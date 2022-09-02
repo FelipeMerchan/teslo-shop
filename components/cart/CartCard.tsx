@@ -3,10 +3,10 @@ import { Grid, CardActionArea, CardMedia, Box, Typography, Button, Link } from '
 
 import { ItemCounter } from '../ui';
 import { FC } from 'react';
-import { IProduct } from '../../interfaces';
+import { ICartProduct } from '../../interfaces';
 
 interface Props {
-    product: IProduct;
+    product: ICartProduct;
     editable: boolean;
 }
 
@@ -19,7 +19,7 @@ export const CartCard: FC<Props> = ({ product, editable }) => {
                 <Link>
                     <CardActionArea>
                         <CardMedia
-                            image={`/products/${product.images[0]}`}
+                            image={`/products/${product.image}`}
                             component='img'
                             sx={{ borderRadius: '5px' }}
                         />
@@ -30,11 +30,21 @@ export const CartCard: FC<Props> = ({ product, editable }) => {
         <Grid item xs={7}>
             <Box display='flex' flexDirection='column'>
                 <Typography variant='body1'>{product.title}</Typography>
-                <Typography variant='body1'>Talla: <strong>M</strong></Typography>
+                <Typography variant='body1'>Talla: <strong>{product.size}</strong></Typography>
                 {
                     editable
-                    ? <ItemCounter />
-                    : <Typography>3 elementos</Typography>
+                    ? (
+                        <ItemCounter
+                            currentValue={product.quantity}
+                            maxValue={10}
+                            updateQuantity={() => {}}
+                        />
+                    )
+                    : (
+                        <Typography>
+                            {product.quantity} {product.quantity > 1 ? 'productos' : 'producto'}
+                        </Typography>
+                    )
                 }
             </Box>
         </Grid>
