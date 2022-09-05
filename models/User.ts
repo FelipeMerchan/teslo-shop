@@ -14,7 +14,7 @@ const userSchema = new Schema({
             default: 'client',
             required: true,
         },
-    }
+    },
 }, {
     timestamps: true,
 });
