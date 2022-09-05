@@ -15,7 +15,7 @@ export const CartList: FC<Props> = ({ editable = false }) => {
             {
                 productsInCart.map(product => (
                     <CartCard
-                        key={product.slug}
+                        key={product.slug + product.size}
                         product={product as ICartProduct}
                         editable={editable}
                     />
