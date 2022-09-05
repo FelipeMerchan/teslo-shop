@@ -51,7 +51,7 @@ export const OrderSummary = () => {
             display='flex'
             justifyContent='end'
         >
-            <Typography variant='subtitle1'>{`$${187.36}`}</Typography>
+            <Typography variant='subtitle1' sx={{ mt: 2 }}>{`$${187.36}`}</Typography>
         </Grid>
     </Grid>
   )

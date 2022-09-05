@@ -35,6 +35,23 @@ export const CartProvider:FC<Props> = ({ children }) => {
     useEffect(() => {
         if (isMounted) Cookies.set('cart', JSON.stringify(state.cart));
     }, [state.cart, isMounted])
+
+    useEffect(() => {
+        if (isMounted) {
+            const numberOfItems = state.cart.reduce((prev, current) => current.quantity + prev, 0);
+            const subTotal = state.cart.reduce((prev, current) => (current.price * current.quantity) + prev, 0);
+            const taxRate = Number(process.env.NEXT_PUBLIC_TAX_RATE || 0);
+
+            const orderSummary = {
+                numberOfItems,
+                subTotal,
+                tax: subTotal * taxRate,
+                total: subTotal * (taxRate + 1),
+            }
+
+            console.log({ orderSummary });
+        };
+    }, [state.cart, isMounted])
     
 
     const addProductToCart = (product: ICartProduct) => {
