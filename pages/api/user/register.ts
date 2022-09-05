@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 import { db } from '../../../database';
 import { User } from '../../../models';
-import { jwt } from '../../../utils';
+import { jwt, validations } from '../../../utils';
 
 type Data =
     | { message: string }
@@ -38,10 +38,9 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
         return res.status(400).json({ message: 'El nombre debe contener mínimo 2 caracteres'})
     }
 
-    // TODO validar email
-    /* if (email.length < 2) {
-        return res.status(400).json({ message: 'El nombre debe contener mínimo 2 caracteres'})
-    } */
+    if (!validations.isValidEmail(email)) {
+        return res.status(400).json({ message: 'El correo no es válido'});
+    }
 
     await db.connect();
     const user = await User.findOne({ email });
@@ -77,4 +76,4 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
             name,
         },
     })
-}
+};
