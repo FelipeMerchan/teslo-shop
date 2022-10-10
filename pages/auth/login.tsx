@@ -103,7 +103,10 @@ const LoginPage = () => {
                             item
                             xs={12}
                         >
-                            <NextLink href='/auth/register' passHref>
+                            <NextLink
+                                href={router.query.p ? `/auth/register?p=${router.query.p}` : '/auth/register'}
+                                passHref
+                            >
                                 <Link underline='always'>
                                     ¿No tienes una cuenta?
                                 </Link>
