@@ -9,7 +9,7 @@ import { AdminPanel } from './AdminPanel';
 
 export const SideMenu = () => {
     const { isMenuOpen, toggleSideMenu } = useContext(UiContext);
-    const { isLoggedIn, user } = useContext(AuthContext);
+    const { isLoggedIn, user, logout } = useContext(AuthContext);
     const router = useRouter();
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -111,7 +111,7 @@ export const SideMenu = () => {
                     {
                         isLoggedIn
                             ? (
-                                <ListItem button>
+                                <ListItem button onClick={logout}>
                                     <ListItemIcon>
                                         <LoginOutlined/>
                                     </ListItemIcon>
@@ -119,7 +119,10 @@ export const SideMenu = () => {
                                 </ListItem>
                             )
                             : (
-                                <ListItem button>
+                                <ListItem
+                                    button
+                                    onClick={() => navigateTo(`/auth/login?p=${router.asPath}`)}
+                                >
                                     <ListItemIcon>
                                         <VpnKeyOutlined/>
                                     </ListItemIcon>
@@ -127,8 +130,6 @@ export const SideMenu = () => {
                                 </ListItem>
                             )
                     }
-
-
 
                     {/* Admin */}
                     {

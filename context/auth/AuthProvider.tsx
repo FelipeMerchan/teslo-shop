@@ -1,4 +1,5 @@
 import { FC, useEffect, useReducer } from 'react';
+import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
@@ -22,6 +23,7 @@ const AUTH_INITIAL_STATE: AuthState = {
 
 export const AuthProvider: FC<Props> = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
+    const router = useRouter();
 
     useEffect(() => {
         checkToken();
@@ -38,7 +40,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
         } catch (error) {
             Cookies.remove('token');
         }
-    }
+    };
 
     const loginUser = async (email: string, password: string): Promise<boolean> => {
         try {
@@ -50,7 +52,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
         } catch (error) {
             return false;
         }
-    }
+    };
 
     const registerUser = async (name: string, email: string, password: string): Promise<{ hasError: boolean; message?: string }> => {
         try {
@@ -75,7 +77,13 @@ export const AuthProvider: FC<Props> = ({ children }) => {
                 message: 'No se pudo crear el usuario - intente de nuevo'
             }
         }
-    }
+    };
+
+    const logout = () => {
+        Cookies.remove('token');
+        Cookies.remove('cart');
+        router.reload();
+    };
 
     return (
         <AuthContext.Provider value={{
@@ -83,6 +91,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 
             // Methods
             loginUser,
+            logout,
             registerUser,
         }}>
             {children}

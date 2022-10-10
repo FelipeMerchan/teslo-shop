@@ -29,8 +29,9 @@ const LoginPage = () => {
             setTimeout(() => setShowError(false), 3000);
             return;
         }
-        //TODO: navegar a la pantalla en la que el usuario estaba
-        router.replace('/');
+
+        const destination = router.query.p?.toString() || '/'
+        router.replace(destination);
     }
 
     return (
