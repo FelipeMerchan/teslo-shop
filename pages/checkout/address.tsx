@@ -34,7 +34,7 @@ const getAddressFromCookies = (): FormData => {
 
 const AddressPage = () => {
     const router = useRouter();
-    const { updateAddress } = useContext(CartContext)
+    const { updateAddress, shippingAddress } = useContext(CartContext);
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
         defaultValues: getAddressFromCookies(),
@@ -139,7 +139,7 @@ const AddressPage = () => {
                                 select
                                 variant='filled'
                                 label='País'
-                                defaultValue={countries[0].code}
+                                defaultValue={shippingAddress ? shippingAddress.country : countries[0].code}
                                 {
                                     ...register('country', {
                                         required: 'Este campo es requerido',

@@ -69,6 +69,7 @@ export const CartProvider:FC<Props> = ({ children }) => {
                 country: Cookies.get('country') || '',
                 phone: Cookies.get('phone') || '',  
             }
+
             dispatch({ type: '[Cart] - LoadAddress from cookies', payload: shippingAddress });
             setIsMounted(true);
         }
