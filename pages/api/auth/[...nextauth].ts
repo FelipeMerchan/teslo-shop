@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
 import Credentials from 'next-auth/providers/credentials';
+
 import { dbUsers } from '../../../database';
 
 export const authOptions: NextAuthOptions = {
@@ -14,7 +15,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         /* Si es exitosa la autenticacion retornaremos un objeto */
-        console.log({ credentials })
+        console.log({ credentials });
 
         //TODO: Validar contra base de datos
 
@@ -41,7 +42,7 @@ export const authOptions: NextAuthOptions = {
 
         switch (account.type) {
           case 'oauth':
-            // TODO: crear usuario o verigicar si existe en mi DB
+            token.user = await dbUsers.oAuthToDbUser(user?.email || '', user?.name || '');
             break;
           case 'credentials':
             token.user = user;

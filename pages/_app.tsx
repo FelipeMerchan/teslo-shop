@@ -6,7 +6,7 @@ import { SWRConfig } from 'swr';
 import { AuthProvider, CartProvider, UiProvider } from '../context';
 
 import '../styles/globals.css';
-import { lightTheme } from '../themes'
+import { lightTheme } from '../themes';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -31,4 +31,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-export default MyApp
+export default MyApp;
