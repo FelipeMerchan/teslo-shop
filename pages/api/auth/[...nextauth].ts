@@ -35,6 +35,17 @@ export const authOptions: NextAuthOptions = {
     newUser: '/auth/register',
   },
 
+  session: {
+    maxAge: 2592000, // 30 dias maximo durara la session
+    strategy: 'jwt',
+    updateAge: 86400, // Cada dia se va a actualizar la sesion
+  },
+
+  jwt: {
+    secret: process.env.NEXTAUTH_SECRET,
+    maxAge: 2592000,
+  },
+
   // Callbacks
   /* Por defecto Neth Auth trabaja con JWT, pero se puede cambiar. */
   callbacks: {

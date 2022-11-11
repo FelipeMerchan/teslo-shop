@@ -18,14 +18,14 @@ type FormData = {
 
 const LoginPage = () => {
     const router = useRouter();
-    const { loginUser } = useContext(AuthContext);
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
     const [showError, setShowError] = useState(false);
-
+    
     const onLoginUser = async ({ email, password }: FormData) => {
         setShowError(false);
         await signIn('credentials', { email, password });
         /* // Version personalizada de la autenticacion:
+        const { loginUser } = useContext(AuthContext);
         const isValidLogin = await loginUser(email, password);
 
         if (!isValidLogin) {
