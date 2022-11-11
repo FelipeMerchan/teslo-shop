@@ -29,7 +29,13 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
-  //Callbacks
+  // Custom pages
+  pages: {
+    signIn: '/auth/login',
+    newUser: '/auth/register',
+  },
+
+  // Callbacks
   /* Por defecto Neth Auth trabaja con JWT, pero se puede cambiar. */
   callbacks: {
     /* Primero se genera el JWT en el callback jwt y luego es pasado al
