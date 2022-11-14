@@ -1,19 +1,27 @@
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
+import Cookies from 'js-cookie';
 import { Box, Button, Card, CardContent, Divider, Grid, Link, Typography } from '@mui/material';
 
 import { CartList, OrderSummary } from '../../components/cart';
 import { ShopLayout } from '../../components/layouts';
 import { CartContext } from '../../context';
-import { countries } from '../../utils';
 
 const SummaryPage = () => {
+    const router = useRouter();
     const { shippingAddress, numberOfItems } = useContext(CartContext);
+
+    useEffect(() => {
+        if (!Cookies.get('firstName')) {
+            router.push('/checkout/address');
+          }
+      }, []);
     
     if (!shippingAddress) {
         return <></>;
     }
-
+    
     const {
         firstName,
         lastName,
@@ -24,8 +32,6 @@ const SummaryPage = () => {
         country,
         phone,
     } = shippingAddress;
-
-    const countryName = useMemo(() => countries.find(countryElement => countryElement.code === country)?.name, [country]);
 
     return (
         <ShopLayout title='Resumen de la orden' pageDescription='Resumen de la orden'>
@@ -57,7 +63,7 @@ const SummaryPage = () => {
                             <Typography>{firstName} {lastName}</Typography>
                             <Typography>{address}{address2 ? `, ${address2}` : ''}</Typography>
                             <Typography>{city}, {zip}</Typography>
-                            <Typography>{countryName}</Typography>
+                            <Typography>{country}</Typography>
                             <Typography>{phone}</Typography>
                             <Divider sx={{ my: 1 }} />
 

@@ -15,7 +15,6 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         /* Si es exitosa la autenticacion retornaremos un objeto */
-        console.log({ credentials });
 
         //TODO: Validar contra base de datos
 
