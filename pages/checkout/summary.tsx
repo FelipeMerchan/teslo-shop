@@ -10,13 +10,17 @@ import { CartContext } from '../../context';
 
 const SummaryPage = () => {
     const router = useRouter();
-    const { shippingAddress, numberOfItems } = useContext(CartContext);
+    const { shippingAddress, numberOfItems, createOrder } = useContext(CartContext);
 
     useEffect(() => {
         if (!Cookies.get('firstName')) {
             router.push('/checkout/address');
-          }
-      }, []);
+        }
+    }, []);
+
+    const onCreateOrder = async () => {
+        await createOrder();
+    }
     
     if (!shippingAddress) {
         return <></>;
@@ -85,6 +89,7 @@ const SummaryPage = () => {
                                     className='circular-btn'
                                     color='secondary'
                                     fullWidth
+                                    onClick={onCreateOrder}
                                 >
                                     Confirmar orden
                                 </Button>

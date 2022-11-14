@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 
 import { ICartProduct, ShippingAddress } from '../../interfaces';
 import { CartContext, cartReducer } from './';
+import { tesloApi } from '../../api';
 
 interface Props {
     children: React.ReactNode;
@@ -18,8 +19,6 @@ export interface CartState {
 
     shippingAddress?: ShippingAddress;
 }
-
-
 
 const CART_INITIAL_STATE = {
     isLoaded: false,
@@ -66,7 +65,6 @@ export const CartProvider:FC<Props> = ({ children }) => {
         }
     }, [])
     
-
     useEffect(() => {
         if (isMounted) Cookies.set('cart', JSON.stringify(state.cart));
     }, [state.cart, isMounted])
@@ -88,7 +86,6 @@ export const CartProvider:FC<Props> = ({ children }) => {
         };
     }, [state.cart, isMounted])
     
-
     const addProductToCart = (product: ICartProduct) => {
         const productInCart = state.cart.some(p => p._id === product._id);
         if (!productInCart) return dispatch({ type: '[Cart] - Update products in cart', payload: [...state.cart, product] });
@@ -128,6 +125,15 @@ export const CartProvider:FC<Props> = ({ children }) => {
         dispatch({ type: '[Cart] - Update address', payload: address });
     }
 
+    const createOrder = async () => {
+        try {
+            const { data } = await tesloApi.post('/orders');
+            console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <CartContext.Provider value={{
             ...state,
@@ -137,6 +143,9 @@ export const CartProvider:FC<Props> = ({ children }) => {
             removeCartProduct,
             updateAddress,
             updateCartQuantity,
+
+            //Orders
+            createOrder,
         }}>
             {children}
         </CartContext.Provider>
