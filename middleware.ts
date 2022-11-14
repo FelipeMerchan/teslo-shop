@@ -1,9 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { jwtVerify } from 'jose';
+import { getToken } from 'next-auth/jwt';
 
 export async function middleware(request: NextRequest) {
     const requestedPage = request.nextUrl.pathname;
 
+    if (requestedPage.startsWith('/checkout/')) {
+        const session = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+
+        if (!session) {
+            const url = request.nextUrl.clone();
+            url.pathname = '/auth/login';
+            url.search = `?p=${requestedPage}`
+            return NextResponse.redirect(url);
+        }
+
+        return NextResponse.next();
+        
+    }
+
+    /* // Version personalizada de la autenticacion:
     if (requestedPage.startsWith('/checkout/')) {
         const token = request.cookies.get('token');
         try {
@@ -15,7 +30,7 @@ export async function middleware(request: NextRequest) {
             url.search = `?p=${requestedPage}`
             return NextResponse.redirect(url);
         }
-    }
+    } */
 }
 
 export const config = {
