@@ -1,5 +1,6 @@
 import { FC, useEffect, useReducer, useState } from 'react';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 import { ICartProduct, IOrder, ShippingAddress } from '../../interfaces';
 import { CartContext, cartReducer } from './';
@@ -125,7 +126,7 @@ export const CartProvider:FC<Props> = ({ children }) => {
         dispatch({ type: '[Cart] - Update address', payload: address });
     }
 
-    const createOrder = async () => {
+    const createOrder = async (): Promise<{ hasError: boolean; message: string; }> => {
         if (!state.shippingAddress) {
             throw new Error('No hay dirección de entrega');
         }
@@ -144,10 +145,24 @@ export const CartProvider:FC<Props> = ({ children }) => {
         }
 
         try {
-            const { data } = await tesloApi.post('/orders', body);
-            console.log(data);
+            const { data } = await tesloApi.post<IOrder>('/orders', body);
+            // TODO dispatch para vaciar el carrito
+            return {
+                hasError: false,
+                message: data._id!,
+            }
         } catch (error) {
-            console.log(error);
+            if (axios.isAxiosError(error)) {
+                return {
+                    hasError: true,
+                    message: error.response?.data.message,
+                }
+            }
+
+            return {
+                hasError: true,
+                message: 'Error no controlado, hable con el administrador'
+            }
         }
     }
 
