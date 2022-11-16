@@ -146,7 +146,8 @@ export const CartProvider:FC<Props> = ({ children }) => {
 
         try {
             const { data } = await tesloApi.post<IOrder>('/orders', body);
-            // TODO dispatch para vaciar el carrito
+            dispatch({ type: '[Cart] - Order complete' });
+
             return {
                 hasError: false,
                 message: data._id!,
