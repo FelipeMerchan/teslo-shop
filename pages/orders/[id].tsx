@@ -14,35 +14,41 @@ interface Props {
 }
 
 const OrderPage: NextPage<Props> = ({ order }) => {
-    console.log(order);
+    const { shippingAddress } = order
 
     return (
-        <ShopLayout title='Resumen de la orden 34123124' pageDescription='Resumen de la orden'>
-            <Typography variant='h1' component='h1'>Orden: 34123124</Typography>
-
-            {/* <Chip
-                sx={{ mt: 2, mb: 4 }}
-                label='Pendiente por pagar'
-                variant='outlined'
-                color='error'
-                icon={<CreditCardOffOutlined />}
-            /> */}
-            <Chip
-                sx={{ mt: 2, mb: 4 }}
-                label='La orden ya fue pagada'
-                variant='outlined'
-                color='success'
-                icon={<CreditScoreOutlined />}
-            />
+        <ShopLayout title='Resumen de la orden' pageDescription='Resumen de la orden'>
+            <Typography variant='h1' component='h1'>Orden: {order._id}</Typography>
+            {
+                order.isPaid
+                ? (
+                    <Chip
+                        sx={{ mt: 2, mb: 4 }}
+                        label='La orden ya fue pagada'
+                        variant='outlined'
+                        color='success'
+                        icon={<CreditScoreOutlined />}
+                    />
+                ) :
+                (
+                    <Chip
+                        sx={{ mt: 2, mb: 4 }}
+                        label='Pendiente por pagar'
+                        variant='outlined'
+                        color='error'
+                        icon={<CreditCardOffOutlined />}
+                    />
+                )
+            }
 
             <Grid container>
                 <Grid item xs={12} sm={7}>
-                    <CartList />
+                    <CartList products={order.orderItems} />
                 </Grid>
                 <Grid item xs={12} sm={5}>
                     <Card className='summary-card'>
                         <CardContent>
-                            <Typography variant='h2'>Resumen (3 productos)</Typography>
+                            <Typography variant='h2'>Resumen ({order.numberOfItems} {order.numberOfItems > 1 ? 'productos' : 'producto'})</Typography>
                             <Divider sx={{ my: 1 }} />
 
                             <Box
@@ -51,30 +57,14 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                                 alignItems='center'
                             >
                                 <Typography variant='subtitle1'>Dirección de entrega</Typography>
-                                <NextLink href='/checkout/address' passHref>
-                                    <Link underline='always'>
-                                        Editar
-                                    </Link>
-                                </NextLink>
                             </Box>
 
-                            <Typography>Felipe Merchan</Typography>
-                            <Typography>Cl 34 No. 11-83</Typography>
-                            <Typography>Bogotá, 101101</Typography>
-                            <Typography>Colombia</Typography>
-                            <Typography>+57 305 708 9099</Typography>
+                            <Typography>{shippingAddress.firstName} {shippingAddress.lastName}</Typography>
+                            <Typography>{shippingAddress.address}{shippingAddress.address2 ? `, ${shippingAddress.address2}` : '' }</Typography>
+                            <Typography>{shippingAddress.city}, {shippingAddress.zip}</Typography>
+                            <Typography>{shippingAddress.country}</Typography>
+                            <Typography>{shippingAddress.phone}</Typography>
                             <Divider sx={{ my: 1 }} />
-
-                            <Box
-                                display='flex'
-                                justifyContent='end'
-                            >
-                                <NextLink href='/cart' passHref>
-                                    <Link underline='always'>
-                                        Editar
-                                    </Link>
-                                </NextLink>
-                            </Box>
 
                             <OrderSummary />
 
