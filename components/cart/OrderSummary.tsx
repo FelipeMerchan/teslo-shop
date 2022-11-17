@@ -1,11 +1,22 @@
-import { useContext } from 'react';
+import { FC, useContext } from 'react';
 import { Grid, Typography } from '@mui/material';
 
 import { CartContext } from '../../context';
 import { currency } from '../../utils';
 
-export const OrderSummary = () => {
+interface Props {
+    orderValues?: {
+        numberOfItems: number;
+        subTotal: number;
+        tax: number;
+        total: number;
+    };
+}
+
+export const OrderSummary: FC<Props> = ({ orderValues }) => {
     const { numberOfItems, subTotal, tax, total } = useContext(CartContext);
+
+    const summaryValues = orderValues ? orderValues : { numberOfItems, subTotal, tax, total };
 
     return (
         <Grid container>
@@ -18,7 +29,7 @@ export const OrderSummary = () => {
                 display='flex'
                 justifyContent='end'
             >
-                <Typography>{numberOfItems} {numberOfItems > 1 ? 'productos' : 'producto'}</Typography>
+                <Typography>{summaryValues.numberOfItems} {summaryValues.numberOfItems > 1 ? 'productos' : 'producto'}</Typography>
             </Grid>
 
             {/* SubTotal */}
@@ -31,7 +42,7 @@ export const OrderSummary = () => {
                 display='flex'
                 justifyContent='end'
             >
-                <Typography>{currency.format(subTotal)}</Typography>
+                <Typography>{currency.format(summaryValues.subTotal)}</Typography>
             </Grid>
 
             {/* Impuestos */}
@@ -44,7 +55,7 @@ export const OrderSummary = () => {
                 display='flex'
                 justifyContent='end'
             >
-                <Typography>{currency.format(tax)}</Typography>
+                <Typography>{currency.format(summaryValues.tax)}</Typography>
             </Grid>
 
             {/* Total */}
@@ -57,7 +68,7 @@ export const OrderSummary = () => {
                 display='flex'
                 justifyContent='end'
             >
-                <Typography variant='subtitle1' sx={{ mt: 2 }}>{currency.format(total)}</Typography>
+                <Typography variant='subtitle1' sx={{ mt: 2 }}>{currency.format(summaryValues.total)}</Typography>
             </Grid>
         </Grid>
     )

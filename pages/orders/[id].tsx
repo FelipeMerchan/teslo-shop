@@ -66,18 +66,32 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                             <Typography>{shippingAddress.phone}</Typography>
                             <Divider sx={{ my: 1 }} />
 
-                            <OrderSummary />
+                            <OrderSummary
+                                orderValues={{
+                                    numberOfItems: order.numberOfItems,
+                                    subTotal: order.subTotal,
+                                    tax: order.tax,
+                                    total: order.total,
+                                }}
+                            />
 
-                            <Box sx={{ mt: 3 }}>
+                            <Box sx={{ mt: 3 }} display='flex' flexDirection='column'>
                                 {/* TODO: pagar */}
-                                <p>Pagar</p>
-                                <Chip
-                                    sx={{ mt: 2, mb: 4 }}
-                                    label='La orden ya fue pagada'
-                                    variant='outlined'
-                                    color='success'
-                                    icon={<CreditScoreOutlined />}
-                                />
+                                {
+                                    order.isPaid
+                                    ? (
+                                        <Chip
+                                            sx={{ mt: 2, mb: 4 }}
+                                            label='La orden ya fue pagada'
+                                            variant='outlined'
+                                            color='success'
+                                            icon={<CreditScoreOutlined />}
+                                        />
+                                    ) :
+                                    (
+                                        <p>Pagar</p>
+                                    )
+                                }                        
                             </Box>
                         </CardContent>
                     </Card>
