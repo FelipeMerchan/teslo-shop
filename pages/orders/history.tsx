@@ -31,9 +31,9 @@ const columns: GridColDef[] = [
         sortable: false,
         renderCell: (params: GridValueGetterParams) => {
             return (
-                <NextLink href={`/orders/${params.row.order}`} passHref>
+                <NextLink href={`/orders/${params.row.orderId}`} passHref>
                     <Link underline='always'>
-                        Ver orden ({params.row.order})
+                        Ver orden
                     </Link>
                 </NextLink>
             )
@@ -46,17 +46,17 @@ interface Props {
 }
 
 const HistoryPage: NextPage<Props> = ({ orderList }) => {
-    const rows = orderList.map((userOrder, index) => ({
-        id: index,
-        paid: userOrder.isPaid,
-        fullName: `${userOrder.shippingAddress.firstName} ${userOrder.shippingAddress.lastName}`,
-        order: userOrder._id,
-    }))
+    const rows = orderList.map((order, index) => ({
+        fullName: `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`,
+        id: index + 1,
+        orderId: order._id,
+        paid: order.isPaid,
+    }));
 
     return (
         <ShopLayout title='Historial de órdenes' pageDescription='Historial de órdenes del cliente'>
             <Typography variant='h1' component='h1' marginBottom={4}>Historial de órdenes</Typography>
-            <Grid container>
+            <Grid container className='fadeIn'>
                 <Grid item xs={12} sx={{ height: 650, width: '100%' }}>
                     <DataGrid
                         columns={columns}
