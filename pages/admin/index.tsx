@@ -1,11 +1,48 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 import { AccessTimeOutlined, AttachMoneyOutlined, CancelPresentationOutlined, CategoryOutlined, CreditCardOffOutlined, CreditCardOutlined, DashboardOutlined, GroupOutlined, ProductionQuantityLimitsOutlined } from '@mui/icons-material';
 
 import { AdminLayout } from '../../components/layouts';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { SummaryTile } from '../../components/admin';
+import { DashboardSummaryResponse } from '../../interfaces';
 
 const DashboardPage = () => {
+  const { data, error } = useSWR<DashboardSummaryResponse>('/api/admin/dashboard', {
+    refreshInterval: 30 * 1000,
+  });
+
+  const [refreshIn, setRefreshIn] = useState(30);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log('tick')
+      setRefreshIn(refreshIn => refreshIn > 0 ? refreshIn - 1 : 30);
+    }, 1000);
+  
+    return () => clearInterval(interval);
+  }, []);
+  
+
+  if (!error && !data) {
+    return <></>;
+  }
+
+  if (error) {
+    console.log(error);
+    return <Typography>Error al cargar la información</Typography>;
+  }
+
+  const {
+    lowInventory,
+    notPaidOrders,
+    numberOfClients,
+    numberOfOrders,
+    numberOfProducts,
+    paidOrders,
+    productsWithNoInventory,
+  } = data!;
+
   return (
     <AdminLayout
       icon={<DashboardOutlined />}
@@ -16,46 +53,46 @@ const DashboardPage = () => {
         <SummaryTile
           icon={<CreditCardOutlined color='secondary' sx={{ fontSize: 40 }} />}
           subTitle='Órdenes totales'
-          title={1}
+          title={numberOfOrders}
         />
         <SummaryTile
           icon={<AttachMoneyOutlined color='success' sx={{ fontSize: 40 }} />}
           subTitle='Órdenes pagadas'
-          title={2}
+          title={paidOrders}
         />
         <SummaryTile
           icon={<CreditCardOffOutlined color='error' sx={{ fontSize: 40 }} />}
           subTitle='Órdenes pendientes'
-          title={3}
+          title={notPaidOrders}
         />
         <SummaryTile
           icon={<GroupOutlined color='primary' sx={{ fontSize: 40 }} />}
           subTitle='Clientes'
-          title={4}
+          title={numberOfClients}
         />
         <SummaryTile
           icon={<CategoryOutlined color='warning' sx={{ fontSize: 40 }} />}
           subTitle='Productos'
-          title={6}
+          title={numberOfProducts}
         />
         <SummaryTile
           icon={<CancelPresentationOutlined color='error' sx={{ fontSize: 40 }} />}
           subTitle='Productos sin existencias'
-          title={6}
+          title={productsWithNoInventory}
         />
         <SummaryTile
           icon={<ProductionQuantityLimitsOutlined color='warning' sx={{ fontSize: 40 }} />}
           subTitle='Bajo inventario'
-          title={7}
+          title={lowInventory}
         />
         <SummaryTile
           icon={<AccessTimeOutlined color='secondary' sx={{ fontSize: 40 }} />}
           subTitle='Actualización en'
-          title={8}
+          title={refreshIn}
         />
       </Grid>
     </AdminLayout>
   )
 };
 
-export default DashboardPage
+export default DashboardPage;
