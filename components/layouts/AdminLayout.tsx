@@ -23,7 +23,7 @@ export const AdminLayout:FC<Props> = ({ children, icon, subTitle, title }) => {
             maxWidth: '1440px',
             padding: '0px 30px',
         }}>
-            <Box display='flex' flexDirection='column'>
+            <Box display='flex' flexDirection='column' sx={{ mb: 2 }}>
               <Typography variant='h1' component='h1'>
                 {icon}
                 {title}

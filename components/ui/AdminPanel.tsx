@@ -1,11 +1,25 @@
-import { CategoryOutlined, ConfirmationNumberOutlined, AdminPanelSettings } from '@mui/icons-material'
-import { Divider, ListSubheader, ListItem, ListItemIcon, ListItemText } from '@mui/material'
+import { FC } from 'react';
+import { CategoryOutlined, ConfirmationNumberOutlined, AdminPanelSettings, DashboardOutlined } from '@mui/icons-material';
+import { Divider, ListSubheader, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 
-export const AdminPanel = () => {
+interface Props {
+    navigateTo: (url: string) => void;
+}
+
+export const AdminPanel:FC<Props> = ({ navigateTo }) => {
   return (
     <>
         <Divider />
         <ListSubheader>Admin Panel</ListSubheader>
+        <ListItem
+            button
+            onClick={() => navigateTo('/admin/')}
+        >
+            <ListItemIcon>
+                <DashboardOutlined/>
+            </ListItemIcon>
+            <ListItemText primary={'Dashboard'} />
+        </ListItem>
         <ListItem button>
             <ListItemIcon>
                 <CategoryOutlined/>

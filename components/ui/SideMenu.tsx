@@ -137,7 +137,7 @@ export const SideMenu = () => {
                     {/* Admin */}
                     {
                         user?.role === 'admin' && (
-                            <AdminPanel />
+                            <AdminPanel navigateTo={navigateTo} />
                         )
                     }
                 </List>
