@@ -61,7 +61,7 @@ export const SideMenu = () => {
                                     <ListItemIcon>
                                         <AccountCircleOutlined/>
                                     </ListItemIcon>
-                                    <ListItemText primary={'Perfil'} />
+                                    <ListItemText primary='Perfil' />
                                 </ListItem>
 
                                 <ListItem
@@ -71,7 +71,7 @@ export const SideMenu = () => {
                                     <ListItemIcon>
                                         <ConfirmationNumberOutlined/>
                                     </ListItemIcon>
-                                    <ListItemText primary={'Mis Ordenes'} />
+                                    <ListItemText primary='Mis Órdenes' />
                                 </ListItem>
                             </>
                         )
@@ -118,7 +118,7 @@ export const SideMenu = () => {
                                     <ListItemIcon>
                                         <LoginOutlined/>
                                     </ListItemIcon>
-                                    <ListItemText primary={'Salir'} />
+                                    <ListItemText primary='Salir' />
                                 </ListItem>
                             )
                             : (
@@ -129,7 +129,7 @@ export const SideMenu = () => {
                                     <ListItemIcon>
                                         <VpnKeyOutlined/>
                                     </ListItemIcon>
-                                    <ListItemText primary={'Ingresar'} />
+                                    <ListItemText primary='Ingresar' />
                                 </ListItem>
                             )
                     }
