@@ -27,4 +27,4 @@ const getOrders = async (res: NextApiResponse<Data>) => {
   await db.disconnect();
 
   return res.status(200).json(orders);
-}
+};
