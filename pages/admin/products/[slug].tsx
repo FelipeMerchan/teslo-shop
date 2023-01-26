@@ -1,24 +1,46 @@
-import React, { FC } from 'react'
-import { GetServerSideProps } from 'next'
-import { AdminLayout } from '../../../components/layouts'
-import { IProduct } from '../../../interfaces';
+import { FC } from 'react';
+import { GetServerSideProps } from 'next';
+import { useForm } from 'react-hook-form';
 import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
-import { dbProducts } from '../../../database';
-import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, ListItem, Paper, Radio, RadioGroup, TextField } from '@mui/material';
+import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, Divider, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, Paper, Radio, RadioGroup, TextField } from '@mui/material';
 
+import { AdminLayout } from '../../../components/layouts';
+import { IProduct, ISize } from '../../../interfaces';
+import { dbProducts } from '../../../database';
 
 const validTypes  = ['shirts','pants','hoodies','hats'];
 const validGender = ['men','women','kid','unisex'];
 const validSizes = ['XS','S','M','L','XL','XXL','XXXL'];
+
+interface FormData {
+  _id?       : string;
+  description: string;
+  images     : string[];
+  inStock    : number;
+  price      : number;
+  sizes      : ISize[];
+  slug       : string;
+  tags       : string[];
+  title      : string;
+  type       : string;
+  gender     : string;
+}
 
 interface Props {
     product: IProduct;
 }
 
 const ProductAdminPage:FC<Props> = ({ product }) => {
+    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+      defaultValues: product,
+    });
 
     const onDeleteTag = ( tag: string ) => {
 
+    };
+
+    const onSubmit = ( formData: FormData ) => {
+      console.log(formData)
     };
 
     return (
@@ -27,7 +49,7 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
             subTitle={`Editando: ${ product.title }`}
             icon={ <DriveFileRenameOutline /> }
         >
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <Box display='flex' justifyContent='end' sx={{ mb: 1 }}>
                     <Button 
                         color="secondary"
@@ -48,12 +70,12 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                             variant="filled"
                             fullWidth 
                             sx={{ mb: 1 }}
-                            // { ...register('name', {
-                            //     required: 'Este campo es requerido',
-                            //     minLength: { value: 2, message: 'Mínimo 2 caracteres' }
-                            // })}
-                            // error={ !!errors.name }
-                            // helperText={ errors.name?.message }
+                            { ...register('title', {
+                                required: 'Este campo es requerido',
+                                minLength: { value: 2, message: 'Mínimo 2 caracteres' }
+                            })}
+                            error={ !!errors.title }
+                            helperText={ errors.title?.message }
                         />
 
                         <TextField
@@ -62,6 +84,11 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                             fullWidth 
                             multiline
                             sx={{ mb: 1 }}
+                            { ...register('description', {
+                                required: 'Este campo es requerido',
+                            })}
+                            error={ !!errors.description }
+                            helperText={ errors.description?.message }
                         />
 
                         <TextField
@@ -70,6 +97,12 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                             variant="filled"
                             fullWidth 
                             sx={{ mb: 1 }}
+                            { ...register('inStock', {
+                                required: 'Este campo es requerido',
+                                min: { value: 0, message: 'Mínimo de valor cero'}
+                            })}
+                            error={ !!errors.inStock }
+                            helperText={ errors.inStock?.message }
                         />
                         
                         <TextField
@@ -78,6 +111,12 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                             variant="filled"
                             fullWidth 
                             sx={{ mb: 1 }}
+                            { ...register('price', {
+                                required: 'Este campo es requerido',
+                                min: { value: 0, message: 'Mínimo de valor cero'}
+                            })}
+                            error={ !!errors.price }
+                            helperText={ errors.price?.message }
                         />
 
                         <Divider sx={{ my: 1 }} />
@@ -140,6 +179,12 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                             variant="filled"
                             fullWidth
                             sx={{ mb: 1 }}
+                            { ...register('slug', {
+                                required: 'Este campo es requerido',
+                                validate: (value) => value.trim().includes(' ') ? 'No puede tener espacios' : undefined
+                            })}
+                            error={ !!errors.slug }
+                            helperText={ errors.slug?.message }
                         />
 
                         <TextField
@@ -198,7 +243,7 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                                     product.images.map( img => (
                                         <Grid item xs={4} sm={3} key={img}>
                                             <Card>
-                                                <CardMedia 
+                                                <CardMedia
                                                     component='img'
                                                     className='fadeIn'
                                                     image={ `/products/${ img }` }
