@@ -18,7 +18,7 @@ interface FormData {
   images     : string[];
   inStock    : number;
   price      : number;
-  sizes      : ISize[];
+  sizes      : string[];
   slug       : string;
   tags       : string[];
   title      : string;
@@ -34,6 +34,16 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
     const { register, handleSubmit, formState: { errors }, getValues, setValue } = useForm<FormData>({
       defaultValues: product,
     });
+
+    const onChangeSize = ( size: string ) => {
+      const currentSizes = getValues('sizes');
+
+      if (currentSizes.includes(size)) {
+        setValue('sizes', currentSizes.filter(s => s!== size), { shouldValidate: true });
+      }
+
+      setValue('sizes', [...currentSizes, size], { shouldValidate: true });
+    };
 
     const onDeleteTag = ( tag: string ) => {
 
@@ -168,7 +178,12 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                             <FormLabel>Tallas</FormLabel>
                             {
                                 validSizes.map(size => (
-                                    <FormControlLabel key={size} control={<Checkbox />} label={ size } />
+                                    <FormControlLabel
+                                      key={size}
+                                      control={<Checkbox checked={getValues('sizes').includes(size)} />}
+                                      label={ size }
+                                      onChange={() => onChangeSize(size)}
+                                    />
                                 ))
                             }
                         </FormGroup>
