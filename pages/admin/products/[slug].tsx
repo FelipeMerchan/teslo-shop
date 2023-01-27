@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import { useForm } from 'react-hook-form';
 import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
@@ -31,9 +31,26 @@ interface Props {
 }
 
 const ProductAdminPage:FC<Props> = ({ product }) => {
-    const { register, handleSubmit, formState: { errors }, getValues, setValue } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({
       defaultValues: product,
     });
+
+    useEffect(() => {
+        /* watch crea un observable aunque nos salgamos de esta pagina: */
+        const subscription = watch((value, { name, type }) => {
+            if (name === 'title') {
+                const newSlug = value.title?.trim()
+                    .replaceAll(' ', '_')
+                    .replaceAll("'", '')
+                    .toLowerCase() || '';
+
+                setValue('slug', newSlug);
+            }
+        });
+    
+    /* Debemos destruir el observable del watch: */
+      return () => subscription.unsubscribe();
+    }, [])
 
     const onChangeSize = ( size: string ) => {
       const currentSizes = getValues('sizes');
