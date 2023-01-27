@@ -7,6 +7,7 @@ import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, 
 import { AdminLayout } from '../../../components/layouts';
 import { IProduct, ISize } from '../../../interfaces';
 import { dbProducts } from '../../../database';
+import { tesloApi } from '../../../api';
 
 const validTypes  = ['shirts','pants','hoodies','hats'];
 const validGender = ['men','women','kid','unisex'];
@@ -32,6 +33,7 @@ interface Props {
 
 const ProductAdminPage:FC<Props> = ({ product }) => {
     const [newTagValue, setNewTagValue] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
     const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({
       defaultValues: product,
     });
@@ -80,8 +82,29 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
         setValue('tags', updatedTags, { shouldValidate: true });
     };
 
-    const onSubmit = ( formData: FormData ) => {
-      console.log(formData);
+    const onSubmit = async ( formData: FormData ) => {
+      if (formData.images.length < 2) return ('Es necesario tener al menos 2 imágenes');
+
+      setIsSaving(true);
+
+      try {
+        const { data } = await tesloApi({
+            url: '/admin/products',
+            method: 'PUT',
+            data: formData,
+        });
+
+        console.log({ data });
+
+        if (!formData._id) {
+            /* TODO: recargar el navegador */
+        } else {
+            setIsSaving(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setIsSaving(false);
+      }
     };
 
     return (
@@ -97,7 +120,8 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                         startIcon={ <SaveOutlined /> }
                         sx={{ width: '150px' }}
                         type="submit"
-                        >
+                        disabled={isSaving}
+                    >
                         Guardar
                     </Button>
                 </Box>
@@ -285,7 +309,7 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                             </Button>
 
                             <Chip 
-                                label="Es necesario tener al 2 imágenes"
+                                label="Es necesario tener al menos 2 imágenes"
                                 color='error'
                                 variant='outlined'
                             />

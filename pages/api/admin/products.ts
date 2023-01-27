@@ -43,7 +43,7 @@ const updateProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
     return res.status(400).json({ message: 'El ID del producto no es válido' });
   }
 
-  if (images.length <= 2) {
+  if (images.length < 2) {
     return res.status(400).json({ message: 'Son necesarias al menos 2 imágenes' });
   }
 
