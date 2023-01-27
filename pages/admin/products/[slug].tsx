@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useForm } from 'react-hook-form';
 import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
@@ -31,13 +31,14 @@ interface Props {
 }
 
 const ProductAdminPage:FC<Props> = ({ product }) => {
+    const [newTagValue, setNewTagValue] = useState('');
     const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({
       defaultValues: product,
     });
 
     useEffect(() => {
         /* watch crea un observable aunque nos salgamos de esta pagina: */
-        const subscription = watch((value, { name, type }) => {
+        const subscription = watch((value, { name }) => {
             if (name === 'title') {
                 const newSlug = value.title?.trim()
                     .replaceAll(' ', '_')
@@ -48,7 +49,7 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
             }
         });
     
-    /* Debemos destruir el observable del watch: */
+      /* Debemos destruir el observable del watch: */
       return () => subscription.unsubscribe();
     }, [])
 
@@ -56,18 +57,31 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
       const currentSizes = getValues('sizes');
 
       if (currentSizes.includes(size)) {
-        setValue('sizes', currentSizes.filter(s => s!== size), { shouldValidate: true });
+        setValue('sizes', currentSizes.filter(s => s !== size), { shouldValidate: true });
       }
 
       setValue('sizes', [...currentSizes, size], { shouldValidate: true });
     };
 
-    const onDeleteTag = ( tag: string ) => {
+    const onNewTag = () => {
+        const newTag = newTagValue.trim().toLowerCase();
+        setNewTagValue('');
+        const currentTags = getValues('tags');
+        
+        if (currentTags.includes(newTag)) {
+            return;
+        }
 
+        currentTags.push(newTag);
+    }
+
+    const onDeleteTag = ( tag: string ) => {
+        const updatedTags = getValues('tags').filter(t => t !== tag);
+        setValue('tags', updatedTags, { shouldValidate: true });
     };
 
     const onSubmit = ( formData: FormData ) => {
-      console.log(formData)
+      console.log(formData);
     };
 
     return (
@@ -228,6 +242,9 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                             fullWidth 
                             sx={{ mb: 1 }}
                             helperText="Presiona [spacebar] para agregar"
+                            onChange={({ target }) => setNewTagValue(target.value)}
+                            value={newTagValue}
+                            onKeyUp={({ code }) => code === 'Space' ? onNewTag() : undefined }
                         />
                         
                         <Box sx={{
@@ -239,7 +256,7 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                         }}
                         component="ul">
                             {
-                                product.tags.map((tag) => {
+                                getValues('tags').map((tag) => {
 
                                 return (
                                     <Chip
