@@ -1,5 +1,5 @@
-import { isValidObjectId } from 'mongoose';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { isValidObjectId } from 'mongoose';
 
 import { db } from '../../../database';
 import { IProduct } from '../../../interfaces';
