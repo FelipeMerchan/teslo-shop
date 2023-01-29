@@ -42,8 +42,6 @@ const parseFiles = async (req: NextApiRequest) => {
   return new Promise((resolve, reject) => {
     const form = new Formidable.IncomingForm();
     form.parse(req, async (error, fields, files) => {
-      console.log({ error, fields, files });
-
       if (error) {
         return reject(error);
       }
