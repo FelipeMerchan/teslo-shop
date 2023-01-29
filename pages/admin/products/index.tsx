@@ -18,7 +18,7 @@ const columns: GridColDef[] = [
             className='fadeIn'
             component='img'
             alt={row.title}
-            image={`/products/${row.img}`}
+            image={row.img}
           />
         </a>
       );
