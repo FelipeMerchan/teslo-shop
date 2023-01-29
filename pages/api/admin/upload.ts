@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import fs from 'fs';
 import Formidable from 'formidable';
 import { v2 as cloudinary } from 'cloudinary';
 

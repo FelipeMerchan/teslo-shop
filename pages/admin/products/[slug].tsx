@@ -96,12 +96,16 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                 const formData = new FormData();
                 formData.append('file', file);
                 const { data } = await tesloApi.post<{ message: string }>('/admin/upload', formData);
-                console.log({ data });
+                setValue('images', [...getValues('images'), data.message], { shouldValidate: true });
             }
         } catch (error) {
             console.log({ error });
         }
-    }
+    };
+
+    const onDeleteImage = (image: string) => {
+        setValue('images', getValues('images').filter(img => img !== image), { shouldValidate: true });
+    };
 
     const onSubmit = async ( formData: FormData ) => {
       if (formData.images.length < 2) return ('Es necesario tener al menos 2 imágenes');
@@ -344,7 +348,7 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
 
                             <Grid container spacing={2} sx={{ mt: 3 }}>
                                 {
-                                    product.images.map( img => (
+                                    getValues('images').map( img => (
                                         <Grid item xs={4} sm={3} key={img}>
                                             <Card>
                                                 <CardMedia
@@ -354,7 +358,11 @@ const ProductAdminPage:FC<Props> = ({ product }) => {
                                                     alt={ img }
                                                 />
                                                 <CardActions>
-                                                    <Button fullWidth color="error">
+                                                    <Button
+                                                        fullWidth
+                                                        color='error'
+                                                        onClick={() => onDeleteImage(img)}
+                                                    >
                                                         Borrar
                                                     </Button>
                                                 </CardActions>
